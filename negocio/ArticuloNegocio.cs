@@ -17,7 +17,7 @@ namespace negocio
             {
                 AccesoDatos datos = new AccesoDatos();
 
-                datos.setarConsulta("select A.Codigo, A.Nombre, A.Descripcion, A.Precio, C.Descripcion Categoria, M.Descripcion Marca, I.ImagenUrl, A.Id, A.IdMarca, A.IdCategoria from ARTICULOS A, CATEGORIAS C, MARCAS M, IMAGENES I where C.Id=A.IdCategoria and M.Id=A.IdMarca and A.Id=I.IdArticulo");
+                datos.setearConsulta("select A.Codigo, A.Nombre, A.Descripcion, A.Precio, C.Descripcion Categoria, M.Descripcion Marca, I.ImagenUrl, A.Id, A.IdMarca, A.IdCategoria from ARTICULOS A, CATEGORIAS C, MARCAS M, IMAGENES I where C.Id=A.IdCategoria and M.Id=A.IdMarca and A.Id=I.IdArticulo");
                 datos.ejectuarLectura();
 
                 while (datos.Lector.Read())
@@ -47,13 +47,51 @@ namespace negocio
             }
         }
 
-        public void modificar(Articulo art)
+        public List<Articulo> listarConSp()
+        {
+            List<Articulo> lista = new List<Articulo>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+
+                datos.setearSP("storedListar");
+                datos.ejectuarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Articulo aux = new Articulo();
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.CodArticulo = (string)datos.Lector["Codigo"];
+                    aux.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Descripcion = (string)datos.Lector["Descripcion"];
+                    aux.Marca = new Marca();
+                    aux.Marca.Id = (int)datos.Lector["IdMarca"];
+                    aux.Marca.Descripcion = (string)datos.Lector["Marca"];
+                    aux.Categoria = new Categoria();
+                    aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
+                    aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
+                    aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
+                    aux.Precio = (decimal)datos.Lector["Precio"];
+
+                    lista.Add(aux);
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+            public void modificar(Articulo art)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setarConsulta("update ARTICULOS set Codigo = @codigo, Nombre = @nombre, Descripcion = @descripcion, IdMarca = @idMarca, IdCategoria = @idCategoria, Precio = @precio where Id = @id");
-                datos.setarConsulta("update IMAGENES set ImagenUrl = @imagenUrl where IdArticulo = @id");
+                datos.setearConsulta("update ARTICULOS set Codigo = @codigo, Nombre = @nombre, Descripcion = @descripcion, IdMarca = @idMarca, IdCategoria = @idCategoria, Precio = @precio where Id = @id");
+                datos.setearConsulta("update IMAGENES set ImagenUrl = @imagenUrl where IdArticulo = @id");
                 datos.setearParametro("@id", art.Id);
                 datos.setearParametro("@codigo", art.CodArticulo);
                 datos.setearParametro("@nombre", art.Nombre);
@@ -82,7 +120,7 @@ namespace negocio
             try
             {
                 
-                datos.setarConsulta("Insert into ARTICULOS (Codigo, Nombre, Descripcion, Precio, IdMarca, IdCategoria) OUTPUT INSERTED.Id values(@codigo, @nombre, @descripcion, @precio, @idMarca, @idCategoria)");
+                datos.setearConsulta("Insert into ARTICULOS (Codigo, Nombre, Descripcion, Precio, IdMarca, IdCategoria) OUTPUT INSERTED.Id values(@codigo, @nombre, @descripcion, @precio, @idMarca, @idCategoria)");
 
                 
                 datos.setearParametro("@codigo", nuevoArticulo.CodArticulo);
@@ -103,7 +141,7 @@ namespace negocio
                 int idArticulo = (int)resultado; 
 
                 
-                datos.setarConsulta("Insert into IMAGENES (IdArticulo, ImagenUrl) values (@id, @ImagenUrl)");
+                datos.setearConsulta("Insert into IMAGENES (IdArticulo, ImagenUrl) values (@id, @ImagenUrl)");
 
                 
                 datos.setearParametro("@id", idArticulo); 
@@ -136,7 +174,7 @@ namespace negocio
                 }
 
 
-                datos.setarConsulta("Insert into IMAGENES (IdArticulo, ImagenUrl) values (@id, @ImagenUrl)");
+                datos.setearConsulta("Insert into IMAGENES (IdArticulo, ImagenUrl) values (@id, @ImagenUrl)");
 
 
                 datos.setearParametro("@id", nuevoArticulo.Id);
@@ -162,7 +200,7 @@ namespace negocio
             try
             {
                 AccesoDatos datos = new AccesoDatos();
-                datos.setarConsulta("Delete from ARTICULOS Where Id = @id");
+                datos.setearConsulta("Delete from ARTICULOS Where Id = @id");
                 datos.setearParametro("@id", id);
                 datos.ejectuarAccion();
             }
@@ -256,7 +294,7 @@ namespace negocio
                     }
                 }
 
-                datos.setarConsulta(consulta);
+                datos.setearConsulta(consulta);
                 datos.ejectuarLectura();
 
                 while (datos.Lector.Read())

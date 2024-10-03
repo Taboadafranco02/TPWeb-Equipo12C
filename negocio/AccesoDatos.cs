@@ -19,14 +19,20 @@ namespace negocio
 
         public AccesoDatos()
         {
-            conexion = new SqlConnection("server =.\\SQLEXPRESS; database = CATALOGO_P3_DB; integrated security = true");
+            conexion = new SqlConnection("server =.\\SQLEXPRESS; database = PROMOS_DB; integrated security = true");
             comando = new SqlCommand();
         }
 
-        public void setarConsulta(string consulta)
+        public void setearConsulta(string consulta)
         {
             comando.CommandType = System.Data.CommandType.Text;
             comando.CommandText = consulta;
+        }
+
+        public void setearSP(string sp)
+        {
+            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.CommandText = sp;
         }
 
         public void setearParametro(string nombre, object valor)

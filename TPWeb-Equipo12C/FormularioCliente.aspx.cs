@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace TPWeb_Equipo12C
 {
-    public partial class Contact : Page
+    public partial class FormularioCliente : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
