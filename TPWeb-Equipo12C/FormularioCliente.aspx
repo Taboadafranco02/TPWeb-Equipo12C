@@ -2,10 +2,14 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-    <h3>formulario cliente</h3>
-
     <div class="row">
-        <!-- Grupo para DNI -->
+        <div class="col-6">
+            <div class="mb-3">
+                <h3>Ingresa tus datos!</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-6">
             <div class="mb-3">
                 <label for="txtDNI" class="form-label">DNI</label>
@@ -14,7 +18,6 @@
         </div>
     </div>
 
-    <!-- Grupo horizontal para Nombre, Apellido y Email -->
     <div class="row">
         <div class="col-md-3">
             <div class="mb-3">
@@ -41,7 +44,6 @@
 
     </div>
 
-    <!-- Otros campos abajo -->
     <div class="row">
         <div class="col-md-3">
             <div class="mb-3">
@@ -61,6 +63,12 @@
             <div class="mb-3">
                 <label for="txtCp" class="form-label">CP</label>
                 <asp:TextBox runat="server" ID="txtCp" CssClass="form-control"></asp:TextBox>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="mb-3">
+                <asp:Button Text="Participar!" runat="server" ID="btnAceptarCliente" CssClass="btn btn-secondary" OnClick="btnAceptarCliente_Click" />
             </div>
         </div>
     </div>

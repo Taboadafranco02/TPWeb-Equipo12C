@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using dominio;
+using System.Xml.Linq;
 
 namespace negocio
 {
@@ -113,41 +114,26 @@ namespace negocio
             }
         }
 
-        public void agregar(Articulo nuevoArticulo)
+       
+
+        public void agregarClienteConSP(Cliente clienteNuevo)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                
-                datos.setearConsulta("Insert into ARTICULOS (Codigo, Nombre, Descripcion, Precio, IdMarca, IdCategoria) OUTPUT INSERTED.Id values(@codigo, @nombre, @descripcion, @precio, @idMarca, @idCategoria)");
 
-                
-                datos.setearParametro("@codigo", nuevoArticulo.CodArticulo);
-                datos.setearParametro("@nombre", nuevoArticulo.Nombre);
-                datos.setearParametro("@descripcion", nuevoArticulo.Descripcion);
-                datos.setearParametro("@precio", nuevoArticulo.Precio);
-                datos.setearParametro("@idMarca", nuevoArticulo.Marca.Id);
-                datos.setearParametro("@idCategoria", nuevoArticulo.Categoria.Id);
+                datos.setearSP("StoredAltaCliente");
 
-                
-                object resultado = datos.ejecutarEscalar();
 
-                if (resultado == null)
-                {
-                    throw new Exception("Error al insertar el artículo. El Id generado es nulo.");
-                }
+                datos.setearParametro("@Documento", clienteNuevo.Documento);
+                datos.setearParametro("@Nombre", clienteNuevo.Nombre);
+                datos.setearParametro("@Apellido", clienteNuevo.Apellido);
+                datos.setearParametro("@Email", clienteNuevo.Email);
+                datos.setearParametro("@Direccion", clienteNuevo.Direccion);
+                datos.setearParametro("@Ciudad", clienteNuevo.Ciudad);
+                datos.setearParametro("@CP", clienteNuevo.CP);
 
-                int idArticulo = (int)resultado; 
-
-                
-                datos.setearConsulta("Insert into IMAGENES (IdArticulo, ImagenUrl) values (@id, @ImagenUrl)");
-
-                
-                datos.setearParametro("@id", idArticulo); 
-                datos.setearParametro("@ImagenUrl", nuevoArticulo.ImagenUrl);
-
-                
                 datos.ejectuarAccion();
             }
             catch (Exception ex)
